@@ -35,8 +35,14 @@ public class Wedstrijd {
     private List<Gebeurtenis> gebeurtenissen;
 
     public Wedstrijd() {
+    }
+
+    public Wedstrijd(Ploeg ploeg1, Ploeg ploeg2) {
         this.ploegen= new ArrayList<Ploeg>();
+        this.ploegen.add(ploeg1);
+        this.ploegen.add(ploeg2);
         this.scheidsrechters = new ArrayList<Scheidsrechter>();
+        this.gebeurtenissen = new ArrayList<Gebeurtenis>();
     }
 
     public void addPloegen(Ploeg p, Ploeg o){
@@ -44,10 +50,15 @@ public class Wedstrijd {
         this.ploegen.add(o);
     }
 
+    public void addScheidsrechter(Scheidsrechter scheids){
+        this.scheidsrechters.add(scheids);
+    }
+
     public void addGebeurtenis(Gebeurtenis g) {
         this.gebeurtenissen.add(g);
     }
 
-
-
+    public List<Ploeg> getPloegen() {
+        return ploegen;
+    }
 }

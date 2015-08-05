@@ -17,15 +17,20 @@ public class Speler {
     private String name;
     private Date geboorteDatum;
     private String adres;
+    //private String rol;
 
     public Speler() {
 
     }
 
 
+   /* public String getRol() {
+        return rol;
+    }
 
-
-
+    public void setRol(String rol) {
+        this.rol = rol;
+    }*/
 
     public Integer getId() {
         return id;

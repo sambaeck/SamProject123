@@ -12,14 +12,14 @@ import java.util.*;
  */
 public class Main {
     private static final Random random = new Random();
+    private static final Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 
     public static void main(String[] args) {
         vulDatabase();
-        speelSpeeldag(1);
     }
 
     private static void vulDatabase() {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction tx = session.beginTransaction();
         Random random = new Random();
 
@@ -34,6 +34,12 @@ public class Main {
                     Speler speler = new Speler();
                     speler.setName(createRandomString());
                     speler.setAdres(createRandomString() + " " + random.nextInt(200) + " " + createZipCode() + " " + createRandomString());
+                    if(j<11){
+                      //  speler.setRol("Basisspeler");
+                    }
+                    else{
+                   //     speler.setRol("Bankzitter");
+                    }
                     ploeg.addSpeler(speler);
                     session.saveOrUpdate(speler);
                     //TODO: speler.setGeboorteDatum(new Date());
@@ -54,6 +60,7 @@ public class Main {
 
                 }
             }*/
+            /*
             for(int x = 0; x<30;x++){
                 for(Ploeg p: afdeling.getPloegen()){
                     Ploeg tegenstander = afdeling.getPloegen().get(random.nextInt(16));
@@ -62,6 +69,13 @@ public class Main {
                     }
                 }
             }
+            */
+
+            List<Wedstrijd> wedstrijden = speelSeizoen(afdeling);
+            for(Wedstrijd wedstrijd : wedstrijden){
+                session.saveOrUpdate(wedstrijd);
+            }
+
 
         }
 
@@ -90,11 +104,81 @@ public class Main {
         return sb.toString();
     }
 
-    private static void speelSeizoen(){
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Transaction tx = session.beginTransaction();
+    private static List<Wedstrijd> speelSeizoen(Afdeling afdeling){
+        List<Wedstrijd> output = new ArrayList<Wedstrijd>();
+        List<Ploeg> ploegen = afdeling.getPloegen();
 
-        //Query queryPloegen = session.createQuery("from Ploeg");
+        for(Ploeg ploeg : ploegen){
+            for(Ploeg tegenstander : ploegen){
+                if(ploeg.getId() != tegenstander.getId()){ // niet tegen jezelf spelen
+                    Wedstrijd wed = new Wedstrijd(ploeg, tegenstander);
+                    addGebeurtenissen(wed);
+                    output.add(wed);
+                }
+            }
+        }
+
+        return output;
+    }
+
+    private static void addGebeurtenissen(Wedstrijd w) {
+        int getal = random.nextInt(100);
+
+        Ploeg thuisploeg = w.getPloegen().get(0);
+        Ploeg uitploeg = w.getPloegen().get(1);
+        List<Speler> spelers= new ArrayList<Speler>();
+        for (Speler speler : thuisploeg.getSpelers()){
+            spelers.add(speler);
+        }
+        for (Speler speler : uitploeg.getSpelers()){
+            spelers.add(speler);
+        }
+        int spelersIndex = 0;
+        if(getal>=0 && getal<6){
+            return;
+        }
+        else if(getal > 5 && getal < 16){
+            Speler speler = spelers.get(random.nextInt(22));
+            Gebeurtenis gebeurtenis = new Gebeurtenis(GebeurtenisType.DOELPUNT, speler);
+            session.saveOrUpdate(gebeurtenis);
+            w.addGebeurtenis(gebeurtenis);
+
+        }
+        else if(getal > 15 && getal < 31){
+            for(int i =0 ; i<2;i++){
+                Speler speler = spelers.get(random.nextInt(22));
+                Gebeurtenis gebeurtenis = new Gebeurtenis(GebeurtenisType.DOELPUNT, speler);
+                session.saveOrUpdate(gebeurtenis);
+                w.addGebeurtenis(gebeurtenis);            }
+        }
+        else if(getal > 30&& getal < 71){
+            for(int i = 0; i <3 ; i++){
+                Speler speler = spelers.get(random.nextInt(22));
+                Gebeurtenis gebeurtenis = new Gebeurtenis(GebeurtenisType.DOELPUNT, speler);
+                session.saveOrUpdate(gebeurtenis);
+                w.addGebeurtenis(gebeurtenis);            }
+        }
+        else if(getal >70  && getal < 86){
+            for(int i =0 ; i<4;i++){
+                Speler speler = spelers.get(random.nextInt(22));
+                Gebeurtenis gebeurtenis = new Gebeurtenis(GebeurtenisType.DOELPUNT, speler);
+                session.saveOrUpdate(gebeurtenis);
+                w.addGebeurtenis(gebeurtenis);            }
+        }
+        else if(getal >85  && getal < 96){
+            for(int i =0 ; i<5;i++){
+                Speler speler = spelers.get(random.nextInt(22));
+                Gebeurtenis gebeurtenis = new Gebeurtenis(GebeurtenisType.DOELPUNT, speler);
+                session.saveOrUpdate(gebeurtenis);
+                w.addGebeurtenis(gebeurtenis);            }
+        }
+        else if(getal >95  && getal < 100){
+            for(int i =0 ; i<4;i++){
+                Speler speler = spelers.get(random.nextInt(22));
+                Gebeurtenis gebeurtenis = new Gebeurtenis(GebeurtenisType.DOELPUNT, speler);
+                session.saveOrUpdate(gebeurtenis);
+                w.addGebeurtenis(gebeurtenis);            }
+        }
     }
 
     private static void speelSpeeldag(int afdeling){

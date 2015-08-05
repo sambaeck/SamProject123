@@ -10,8 +10,8 @@
         <property name="connection.username">root</property>
         <property name="connection.password">hanneke547</property>
 
-        <!-- Create database -->
-        <property name="hbm2ddl.auto">create</property>
+        <!-- Create database
+        <property name="hbm2ddl.auto">create</property> -->
 
         <!-- SQL dialect -->
         <property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
